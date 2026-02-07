@@ -25,38 +25,38 @@ PulseOps is a real-time analytics and anomaly detection platform for product and
 ```mermaid
 flowchart LR
   subgraph Streaming
-    P[Event Producer\nuser_signup | payment | feature_usage | churn]
+    P[Event Producer<br/>user_signup, payment, feature_usage, churn]
     K[Redpanda (Kafka)]
     P --> K
   end
 
   subgraph Ingestion
-    C[Ingestion Service\nIdempotent writes]
+    C[Ingestion Service<br/>Idempotent writes]
     K --> C
   end
 
   subgraph Warehouse
-    D[DuckDB\nraw_events]
+    D[DuckDB<br/>raw_events]
     C --> D
   end
 
   subgraph Modeling
-    M[dbt Models\nfact_events\nDAU / Revenue / Churn]
+    M[dbt Models<br/>fact_events<br/>DAU / Revenue / Churn]
     D --> M
   end
 
   subgraph Intelligence
-    A[Anomaly Engine\nSTL + Isolation Forest\nRoot Cause Attribution]
+    A[Anomaly Engine<br/>STL + Isolation Forest<br/>Root Cause Attribution]
     M --> A
   end
 
   subgraph Serving
-    F[FastAPI\n/metrics/*]
+    F[FastAPI<br/>/metrics/*]
     A --> F
   end
 
   subgraph Experience
-    W[Next.js Dashboard\nKPIs • Charts • Anomalies]
+    W[Next.js Dashboard<br/>KPIs • Charts • Anomalies]
     F --> W
   end
 ```
