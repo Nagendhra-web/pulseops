@@ -1,0 +1,47 @@
+version: 2
+
+sources:
+  - name: pulseops
+    tables:
+      - name: raw_events
+        freshness:
+          warn_after: { count: 1, period: day }
+          error_after: { count: 2, period: day }
+        loaded_at_field: event_timestamp
+        columns:
+          - name: event_id
+            tests:
+              - not_null
+              - unique
+          - name: event_timestamp
+            tests:
+              - not_null
+
+models:
+  - name: fact_events
+    columns:
+      - name: event_id
+        tests:
+          - not_null
+          - unique
+      - name: event_date
+        tests:
+          - not_null
+  - name: daily_active_users
+    columns:
+      - name: event_date
+        tests:
+          - not_null
+          - unique
+  - name: revenue_metrics
+    columns:
+      - name: event_date
+        tests:
+          - not_null
+          - unique
+  - name: churn_metrics
+    columns:
+      - name: event_date
+        tests:
+          - not_null
+          - unique

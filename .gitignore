@@ -1,0 +1,13 @@
+**/__pycache__/
+**/*.pyc
+**/.pytest_cache/
+**/.mypy_cache/
+
+apps/web/node_modules/
+apps/web/.next/
+apps/web/.env*
+
+analytics/warehouse/*.duckdb
+analytics/warehouse/*.wal
+
+.env

@@ -1,0 +1,87 @@
+services:
+  redpanda:
+    image: redpandadata/redpanda:latest
+    container_name: pulseops-redpanda
+    command:
+      - redpanda
+      - start
+      - --overprovisioned
+      - --smp
+      - "1"
+      - --memory
+      - 1G
+      - --reserve-memory
+      - 0M
+      - --node-id
+      - "0"
+      - --kafka-addr
+      - PLAINTEXT://0.0.0.0:9092
+      - --advertise-kafka-addr
+      - PLAINTEXT://redpanda:9092
+    ports:
+      - "9092:9092"
+
+  api:
+    build:
+      context: ..
+      dockerfile: apps/api/Dockerfile
+    container_name: pulseops-api
+    env_file:
+      - ../.env
+    volumes:
+      - ../analytics/warehouse:/data
+    depends_on:
+      - redpanda
+    ports:
+      - "8000:8000"
+
+  ingestion:
+    build:
+      context: ..
+      dockerfile: apps/api/Dockerfile
+    container_name: pulseops-ingestion
+    command: ["python", "-m", "app.ingestion.worker"]
+    env_file:
+      - ../.env
+    volumes:
+      - ../analytics/warehouse:/data
+    depends_on:
+      - redpanda
+
+  web:
+    build:
+      context: ..
+      dockerfile: apps/web/Dockerfile
+    container_name: pulseops-web
+    env_file:
+      - ../.env
+    environment:
+      - NEXT_PUBLIC_API_URL=http://api:8000
+    depends_on:
+      - api
+    ports:
+      - "3000:3000"
+
+  dbt:
+    build:
+      context: ..
+      dockerfile: analytics/dbt/Dockerfile
+    container_name: pulseops-dbt
+    env_file:
+      - ../.env
+    environment:
+      - DBT_RUN_INTERVAL_SEC=${DBT_RUN_INTERVAL_SEC:-60}
+    volumes:
+      - ../analytics/warehouse:/data
+    depends_on:
+      - ingestion
+
+  producer:
+    build:
+      context: ..
+      dockerfile: streaming/producer/Dockerfile
+    container_name: pulseops-producer
+    env_file:
+      - ../.env
+    depends_on:
+      - redpanda

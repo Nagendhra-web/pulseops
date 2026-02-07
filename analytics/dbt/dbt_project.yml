@@ -1,0 +1,15 @@
+name: pulseops_analytics
+version: "1.0.0"
+config-version: 2
+
+profile: pulseops
+
+model-paths: ["models"]
+analysis-paths: ["analysis"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+
+models:
+  pulseops_analytics:
+    +materialized: table

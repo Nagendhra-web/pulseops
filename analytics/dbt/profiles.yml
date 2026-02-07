@@ -1,0 +1,6 @@
+pulseops:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: /data/pulseops.duckdb
