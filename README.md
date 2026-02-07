@@ -23,42 +23,42 @@ PulseOps is a real-time analytics and anomaly detection platform for product and
 ## Architecture
 
 ```mermaid
-flowchart LR
-  subgraph Streaming
-    P[Event Producer<br/>user_signup, payment, feature_usage, churn]
-    K[Redpanda (Kafka)]
-    P --> K
-  end
+flowchart LR;
+  subgraph Streaming;
+    P[Event Producer<br/>user_signup, payment, feature_usage, churn];
+    K[Redpanda (Kafka)];
+    P --> K;
+  end;
 
-  subgraph Ingestion
-    C[Ingestion Service<br/>Idempotent writes]
-    K --> C
-  end
+  subgraph Ingestion;
+    C[Ingestion Service<br/>Idempotent writes];
+    K --> C;
+  end;
 
-  subgraph Warehouse
-    D[DuckDB<br/>raw_events]
-    C --> D
-  end
+  subgraph Warehouse;
+    D[DuckDB<br/>raw_events];
+    C --> D;
+  end;
 
-  subgraph Modeling
-    M[dbt Models<br/>fact_events<br/>DAU / Revenue / Churn]
-    D --> M
-  end
+  subgraph Modeling;
+    M[dbt Models<br/>fact_events<br/>DAU / Revenue / Churn];
+    D --> M;
+  end;
 
-  subgraph Intelligence
-    A[Anomaly Engine<br/>STL + Isolation Forest<br/>Root Cause Attribution]
-    M --> A
-  end
+  subgraph Intelligence;
+    A[Anomaly Engine<br/>STL + Isolation Forest<br/>Root Cause Attribution];
+    M --> A;
+  end;
 
-  subgraph Serving
-    F[FastAPI<br/>/metrics/*]
-    A --> F
-  end
+  subgraph Serving;
+    F[FastAPI<br/>/metrics/*];
+    A --> F;
+  end;
 
-  subgraph Experience
-    W[Next.js Dashboard<br/>KPIs • Charts • Anomalies]
-    F --> W
-  end
+  subgraph Experience;
+    W[Next.js Dashboard<br/>KPIs, Charts, Anomalies];
+    F --> W;
+  end;
 ```
 
 ## Local setup
